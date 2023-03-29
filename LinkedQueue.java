@@ -47,6 +47,23 @@ public class LinkedQueue<T> implements QueueInterface<T>
     }
   }
 
+  public T cancel(PrintJob job) {
+    if (isEmpty())
+      throw new QueueUnderflowException("Dequeue attempted on empty queue.");
+    else { //add special cases?
+      LLNode<T> curr = front;
+      LLNode<T> prev = null;
+      while(!job.equals(curr.getInfo())) {
+        prev = curr;
+        curr = curr.getLink();
+      }
+      T element = curr.getInfo();   //is this necessary?
+      prev.setLink(curr.getLink());
+      numElements--;
+      return element;
+    }
+  }
+
   public boolean isEmpty()
   // Returns true if this queue is empty; otherwise, returns false.
   {
