@@ -16,8 +16,15 @@ public class PrintJob {
         return this.jobNum;
     }
 
-    public boolean equals(PrintJob job2) {   //compares the job numbers of two print jobs
-        if (this.jobNum == job2.getJobNum())
+    //getter method for number of bytes
+    public int getNumBytes() {
+        return this.numBytes;
+    }
+
+    public boolean equals(Object job2) {   //compares the job numbers of two print jobs
+        if(job2 == null || !(job2 instanceof PrintJob))
+            return false;
+        if (this.jobNum == ((PrintJob)job2).getJobNum())
             return true;
         return false;
     }

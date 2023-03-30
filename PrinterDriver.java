@@ -13,17 +13,19 @@ public class PrinterDriver {
         String command, owner;
 
         time = printJobsFile.nextInt();
-        while (printJobsFile.hasNext()) {
+        while (printJobsFile.hasNext() && currTime != 10) {
             System.out.println("currTime: " + currTime);
-            if(currTime == time) {
+            if(currTime == time) {      //executes instructions only if currTime = time of instruction
                 command = printJobsFile.next();
                 num = printJobsFile.nextInt();
                 System.out.print(time + " " + command + " " + num);
-                switch(command) {
+                switch(command) {   //executes based on command read
                     case "o": 
-                        //The print server should bring the printer online, so print jobs can be added to its queue and it can start printing them.
+                        //The print server should bring the printer online, so print jobs can be added to its queue and it can start printing them
                         size = printJobsFile.nextInt();
                         System.out.println(" " + size);
+
+                        pServer.activatePrinter(num, currTime);
                         break;
                     case "p":
                         //get input for size and owner logonId and put new print job into a print queue
@@ -31,6 +33,8 @@ public class PrinterDriver {
                         owner = printJobsFile.next();
                         PrintJob newJob = new PrintJob(num, size, owner);
                         System.out.println(" " + size + " " + owner);
+
+                        pServer.print(newJob, currTime);
                         break;
                     case "f":
                         //make a printer go offline
@@ -42,13 +46,16 @@ public class PrinterDriver {
                         break;
                 }
 
+                pServer.checkPrinters(currTime);
+
                 try {
                     time = printJobsFile.nextInt();
-                } catch (NoSuchElementException e) {
+                } catch (NoSuchElementException e) {    //caught when on last line of file
                     System.out.println("no such element");
                 }
             } else {
-                currTime++;
+                pServer.checkPrinters(currTime);
+                currTime++;     //increment currTime if currTime doesn't match time
             }
         }
         
