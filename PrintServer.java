@@ -1,9 +1,21 @@
+import java.util.Scanner;
+
 public class PrintServer {
     Printer[] printerArray;     //array of printers
 
     //Constructor
-    public PrintServer() {
+    public PrintServer(Scanner printerFile) {
+        int numPrinters = 0, speed = 0;
+        numPrinters = printerFile.nextInt();    //gets the number of printers from file
+        System.out.println("numPrinters: " + numPrinters);
 
+        printerArray = new Printer[numPrinters];
+        for(int i = 0; i < numPrinters; i++){
+            speed = printerFile.nextInt();
+            printerArray[i] = new Printer(i, speed);    //creates and initializes new printer
+            System.out.println("Printer " + i + " Speed: " + speed);
+        }
+        System.out.println();
     }
 
     //check if necessary
