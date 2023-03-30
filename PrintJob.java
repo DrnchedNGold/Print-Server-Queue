@@ -1,10 +1,14 @@
+import javax.print.attribute.Size2DSyntax;
+
 public class PrintJob {
     private int jobNum;     //print job number
     private int numBytes;   //number of bytes in job
     private String ownerLogonID;  //logon id of the owner of the job
 
-    public PrintJob() {
-
+    public PrintJob(int jobNum, int numBytes, String ownerLogonID) {
+        this.jobNum = jobNum;
+        this.numBytes = numBytes;
+        this.ownerLogonID = ownerLogonID;
     }
 
     //getter method for job number
