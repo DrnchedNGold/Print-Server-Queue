@@ -1,5 +1,3 @@
-import javax.print.attribute.Size2DSyntax;
-
 public class PrintJob {
     private int jobNum;     //print job number
     private int numBytes;   //number of bytes in job

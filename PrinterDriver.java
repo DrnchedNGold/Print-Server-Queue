@@ -13,7 +13,7 @@ public class PrinterDriver {
         String command, owner;
 
         time = printJobsFile.nextInt();
-        while (printJobsFile.hasNext() && currTime != 10) {
+        while (printJobsFile.hasNext() && currTime != 15) {
             System.out.println("currTime: " + currTime);
             if(currTime == time) {      //executes instructions only if currTime = time of instruction
                 command = printJobsFile.next();
@@ -39,6 +39,9 @@ public class PrinterDriver {
                     case "f":
                         //make a printer go offline
                         System.out.println();
+
+                        pServer.takeOffline(num, currTime);
+
                         break;
                     case "c":
                         //cancel a printjob from each printer
