@@ -41,6 +41,7 @@ public class Printer {
         //System.out.println("Print Job " + jobNum + " removed from Printer " + printerNum);
     }
 
+    //getter method for current job that is printing
     public PrintJob getCurrJob() {
         return this.currJob;
     }
@@ -73,6 +74,11 @@ public class Printer {
     //setter method for printer status
     public void setPrinterStatus(String newStatus) {
         printerStatus = newStatus;
+    }
+
+    //setter method for current print job
+    public void setCurrJob(PrintJob newJob) {
+        this.currJob = newJob;
     }
 
 }

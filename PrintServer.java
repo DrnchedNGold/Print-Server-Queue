@@ -45,10 +45,11 @@ public class PrintServer {
     // take a printer offline: the job (if any) that was printing is terminated, and any jobs waiting in that printer's queue are distributed to the other printers. Each job that is deleted from the offline printer's queue should be sent to the printer that has the shortest queue. (calculate which queue is the shortest for each print job)
     public void takeOffline(int printerNum, int currTime) {
         Printer printer = printerArray[printerNum];
-        int leastPrinterNum = 0;
+        int leastPrinterNum = -1;
 
         if(printer.getPrinterStatus().equals("printing")) {     //if printer is printing then terminate that print job
             System.out.println("Time " + currTime + ": Printer " + printerNum + " offline, Print job " + printer.getCurrentJobNum() + " not completed");
+            //printer.setCurrJob(new PrintJob(-1, 0, null));
         }
         else {
             System.out.println("Time " + currTime + ": Printer " + printerNum + " offline");
@@ -86,20 +87,41 @@ public class PrintServer {
 
     private int findLeastPrinter() {
         //find the printer with the least number of bytes to print
-        int leastBytes = printerArray[0].getTotalSize();        //initialize leastBytes to size of first printer
-        int leastPrinterNum = 0;                                //initialize leastPrinterNum to first printer
-    //    int leastPrinterNoPrinting = -1;
+        int leastBytes = -1;        //initialize leastBytes to size of first printer
+        int leastBytesNoPrinting = -1;                  
+        int leastPrinterNum = -1;                                //initialize leastPrinterNum to first printer
+        int leastPrinterNoPrinting = -1;
         //boolean allPrinting = true;                    //true if all printers are printing
         
         for(int i = 0; i < printerArray.length; i++) {      //loop through array of printers
             if(!printerArray[i].getPrinterStatus().equals("offline")) {    //checks if printer is not offline
-                if(printerArray[i].getTotalSize() < leastBytes) {
-                    leastPrinterNum = i;
-                    System.out.println("leastPrinterNum: " + leastPrinterNum);
+                //System.out.println("Printer " + i + " status: " + printerArray[i].getPrinterStatus());
+                if(!printerArray[i].getPrinterStatus().equals("printing")) {
+                    if(leastPrinterNoPrinting == -1) {
+                        leastBytesNoPrinting = printerArray[i].getTotalSize();
+                        leastPrinterNoPrinting = i;
+                    }
+                    if(printerArray[i].getTotalSize() < leastBytesNoPrinting) {
+                        leastPrinterNoPrinting = i;
+                    }
+                    //System.out.println("Printer " + i + " status: " + printerArray[i].getPrinterStatus() + " leastPrinterNoPrinting: " + leastPrinterNoPrinting);
+                } 
+                else {  //if all are printing then leastPrinterNoPrinting will be -1
+                    if(leastBytes == -1) {
+                        leastBytes = printerArray[i].getTotalSize();
+                        leastPrinterNum = i;
+                    }
+                    if(printerArray[i].getTotalSize() < leastBytes) {
+                        leastPrinterNum = i;
+                    }
+                    //System.out.println("Printer " + i + " status: " + printerArray[i].getPrinterStatus() + " leastPrinterNum: " + leastPrinterNum);
                 }
             }
         }
-        return leastPrinterNum;
+        if(leastPrinterNoPrinting == -1)
+            return leastPrinterNum;
+        else
+            return leastPrinterNoPrinting;
     }
 
 }

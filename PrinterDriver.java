@@ -13,8 +13,8 @@ public class PrinterDriver {
         String command, owner;
 
         time = printJobsFile.nextInt();
-        while (printJobsFile.hasNext() && currTime != 15) {
-            System.out.println("currTime: " + currTime);
+        while (printJobsFile.hasNext() && currTime != 25) {
+            //System.out.println("currTime: " + currTime);
             if(currTime == time) {      //executes instructions only if currTime = time of instruction
                 command = printJobsFile.next();
                 num = printJobsFile.nextInt();
@@ -60,7 +60,6 @@ public class PrinterDriver {
                 pServer.checkPrinters(currTime);
                 currTime++;     //increment currTime if currTime doesn't match time
             }
-        }
-        
+        }  
     }
 }
