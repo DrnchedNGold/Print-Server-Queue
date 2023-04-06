@@ -47,6 +47,42 @@ public class LinkedQueue<T> implements QueueInterface<T>
     }
   }
 
+  //find item in queue and remove it
+  public T cancel(PrintJob item) {
+    if (isEmpty()) {
+      //throw new QueueUnderflowException("Cancel attempted on empty queue.");
+      //System.out.println("Cancel attempted on empty queue.");
+      return null;
+    }
+    else
+    {
+      LLNode<T> prev = null;
+      LLNode<T> curr = front;
+      T element;
+      element = curr.getInfo();
+
+      while(curr != null && !curr.getInfo().equals(item)) {
+        prev = curr;
+        curr = curr.getLink();
+      }
+
+      //if curr == null then item not in queue and null is returned
+      if (curr == null) {
+        return null;
+      }
+      else if (curr == front)  //checks if at front and if queue is empty
+        element = dequeue();
+      else if (curr == rear) {  //checks if at rear
+        prev = null;
+      }
+      else { 
+        prev.setLink(curr.getLink());
+      }
+      numElements--;
+      return element;
+    }
+  }
+
   public boolean isEmpty()
   // Returns true if this queue is empty; otherwise, returns false.
   {

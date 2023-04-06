@@ -39,7 +39,19 @@ public class PrintServer {
 
     // remove the job from each print queue
     public void cancelJob(int jobNum, int currTime) {
+        PrintJob temp = new PrintJob(jobNum, 0, " ");
+        PrintJob removedJob = null;
+        for(Printer printer: printerArray) {
+            removedJob = printer.cancelPrintJob(temp, currTime);
+            if(removedJob != null) 
+                break;
+        }
 
+        if(removedJob == null) //job was not found in queue
+            System.out.println("Time " + currTime + ": Print job number " + jobNum + " not found/not canceled");
+        else {
+            System.out.println("Time " + currTime + ": Print job number " + jobNum + " canceled");
+        }
     }
 
     // take a printer offline: the job (if any) that was printing is terminated, and any jobs waiting in that printer's queue are distributed to the other printers. Each job that is deleted from the offline printer's queue should be sent to the printer that has the shortest queue. (calculate which queue is the shortest for each print job)
@@ -49,7 +61,7 @@ public class PrintServer {
 
         if(printer.getPrinterStatus().equals("printing")) {     //if printer is printing then terminate that print job
             System.out.println("Time " + currTime + ": Printer " + printerNum + " offline, Print job " + printer.getCurrentJobNum() + " not completed");
-            //printer.setCurrJob(new PrintJob(-1, 0, null));
+            printer.setCurrJob(new PrintJob(-1, 0, null));
         }
         else {
             System.out.println("Time " + currTime + ": Printer " + printerNum + " offline");
@@ -64,6 +76,7 @@ public class PrintServer {
                 printerArray[leastPrinterNum].addPrintJob(LLjobs.dequeue(), currTime);
             }
         }
+        
     }
 
     //check each printer to see if it has a print job finished at the current time. If so, then check each printer to see if it has a print job in queue that can start at the current time.
@@ -83,6 +96,20 @@ public class PrintServer {
                 }
             }
         }
+    }
+
+    public boolean isRunning(int currTime) {
+        for(Printer printer: printerArray) {
+            //System.out.println("Printer " + printer.getPrinterNum() + " status: " + printer.getPrinterStatus());
+            if(!printer.getPrinterStatus().equals("offline")) { //printer not offline
+                //System.out.println("finishTime: " + printer.getFinishTime() + " currTime: " + currTime);
+                if(printer.getFinishTime() >= currTime) {
+                    //System.out.println("returned true for printer " + printer.getPrinterNum());
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private int findLeastPrinter() {

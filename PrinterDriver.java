@@ -13,17 +13,17 @@ public class PrinterDriver {
         String command, owner;
 
         time = printJobsFile.nextInt();
-        while (printJobsFile.hasNext() && currTime != 25) {
+        while (printJobsFile.hasNext()) {
             //System.out.println("currTime: " + currTime);
             if(currTime == time) {      //executes instructions only if currTime = time of instruction
                 command = printJobsFile.next();
                 num = printJobsFile.nextInt();
-                System.out.print(time + " " + command + " " + num);
+                //System.out.print(time + " " + command + " " + num);
                 switch(command) {   //executes based on command read
                     case "o": 
                         //The print server should bring the printer online, so print jobs can be added to its queue and it can start printing them
                         size = printJobsFile.nextInt();
-                        System.out.println(" " + size);
+                        //System.out.println(" " + size);
 
                         pServer.activatePrinter(num, currTime);
                         break;
@@ -32,20 +32,22 @@ public class PrinterDriver {
                         size = printJobsFile.nextInt();
                         owner = printJobsFile.next();
                         PrintJob newJob = new PrintJob(num, size, owner);
-                        System.out.println(" " + size + " " + owner);
+                        //System.out.println(" " + size + " " + owner);
 
                         pServer.print(newJob, currTime);
                         break;
                     case "f":
                         //make a printer go offline
-                        System.out.println();
+                        //System.out.println();
 
                         pServer.takeOffline(num, currTime);
 
                         break;
                     case "c":
                         //cancel a printjob from each printer
-                        System.out.println();
+                        //System.out.println();
+
+                        pServer.cancelJob(num, currTime);
                         break;
                 }
 
@@ -54,12 +56,18 @@ public class PrinterDriver {
                 try {
                     time = printJobsFile.nextInt();
                 } catch (NoSuchElementException e) {    //caught when on last line of file
-                    System.out.println("no such element");
+                    //System.out.println("no such element");
                 }
             } else {
                 pServer.checkPrinters(currTime);
                 currTime++;     //increment currTime if currTime doesn't match time
             }
-        }  
+        }
+    
+        while(pServer.isRunning(currTime)) {
+            currTime++;
+            pServer.checkPrinters(currTime);
+            //System.out.println("currTime: " + currTime);
+        }
     }
 }

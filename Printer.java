@@ -21,11 +21,11 @@ public class Printer {
         currJob = queue.dequeue();
         jobNum = currJob.getJobNum();     //updates jobNum to that of job currently being printed
         this.printerStatus = "printing";            //changed printer status to printing
-        finishTime = currTime + (int) Math.ceil(totalSize/speed);      //end time of job
+        finishTime = currTime + (int) Math.ceil(currJob.getNumBytes()/speed);      //end time of job
         totalSize -= currJob.getNumBytes();   //remove size of job from total size of queue
 
         System.out.println("Time " + currTime + ": Printer " + printerNum + " printing job " + jobNum);
-        System.out.println("finishTime: " + finishTime);
+        //System.out.println("finishTime: " + finishTime);
     }
 
     //adds a print job to the printer's queue and updates the total number of bytes of all jobs in the queue
@@ -34,6 +34,14 @@ public class Printer {
         totalSize += job.getNumBytes();         //updates the total number of bytes in the queue
         
         System.out.println("Time " + currTime + ": Print job number " + job.getJobNum() + " queued for printer " + printerNum);
+    }
+
+    public PrintJob cancelPrintJob(PrintJob job, int currTime) {
+        PrintJob removedJob = queue.cancel(job);
+
+        if(removedJob != null) //job was not found in queue
+            totalSize -= removedJob.getNumBytes();
+        return removedJob;
     }
 
     public LinkedQueue<PrintJob> getAllJobs() {   //dequeues from queue
@@ -79,6 +87,7 @@ public class Printer {
     //setter method for current print job
     public void setCurrJob(PrintJob newJob) {
         this.currJob = newJob;
+        this.jobNum = newJob.getJobNum();
     }
 
 }
